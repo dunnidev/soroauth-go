@@ -110,6 +110,12 @@ func TestEveryExportedEntryFunctionPreservesInput(t *testing.T) {
 		"Equal": func(entry xdr.SorobanAuthorizationEntry) {
 			_ = Equal(entry, entry)
 		},
+		"StreamingSign": func(entry xdr.SorobanAuthorizationEntry) {
+			visitor := func(ctx context.Context, address string, preimage xdr.HashIdPreimage, payload [32]byte) (xdr.ScVal, error) {
+				return signer.Sign(ctx, preimage, payload)
+			}
+			_, _ = StreamingSign(context.Background(), entry, visitor, validUntil, "Test SDF Network ; September 2015")
+		},
 	}
 
 	discovered := make(map[string]bool, len(functions))
