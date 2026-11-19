@@ -31,6 +31,27 @@ this project adheres to
   on an earlier entry, so being re-entered on another thread trips
   `morestack on g0`. Linux is unaffected, and ordinary synchronous use was not
   reproduced as failing. (#518)
+- Add entry expiry and freshness helpers: `CheckExpiration` reports an
+  `EntryValidity` for an entry against a current ledger, and `IsExpired` and
+  `WithinMargin` answer the two questions callers were writing by hand. The
+  expiration ledger itself is still valid, matching the host, which rejects only
+  once the current ledger is past it. (#320)
+
+- Add `MergeEntries`, which combines independently signed copies of one
+  authorization entry and reports a `MergeConflict` rather than silently
+  preferring one copy, so two parties signing the same entry in parallel can
+  combine their results. (#321)
+
+- Add a pluggable signature-shape registry: `ShapeRegistry` with
+  `ShapeRegistration`, `ShapeMatcher` and `ShapeVerifier`, plus
+  `DefaultShapeRegistry` for the shapes the library already knows. A custom
+  account's signature shape can be registered without changing the library.
+  (#322)
+
+- The C ABI ships a committed, hand-written `bindings/c/libsoroauth.h` instead
+  of whatever cgo generated, with a test that fails when the header and the
+  exported functions disagree, so a signature change can no longer reach
+  consumers unnoticed. (#539)
 
 - Add `make ci-local`, which runs everything CI runs, in CI's order, with the
   commands CI uses. `scripts/cilocal` reads the `run:` steps out of
