@@ -10,6 +10,28 @@ this project adheres to
 
 ### Added
 
+- Add a structured audit record for every signing decision: `AuditRecord` and
+  the `AuditSink` interface, attached with the `WithAudit` option. A record is
+  written whether the decision was to sign or to refuse, and an audit write
+  failure fails the call rather than being dropped. The record carries hashes
+  and metadata only — never a seed, key or signature value, which a test
+  asserts. (#319)
+
+- Add `StreamingSign`, which walks a delegate tree node by node through a
+  `NodeVisitor` instead of materialising the whole tree, so a very large tree
+  can be signed without holding every node in memory at once. (#315)
+
+- Add `WithRateLimit`, a signer wrapper with `RateLimitConfig` and
+  `RateLimitMode`, for remote signers behind a provider quota. (#329)
+
+### Fixed
+
+- Document the intermittent macOS crash in the Node binding under `node:test` in
+  `bindings/node/README.md`: Go's cgo entry reuses the g0 stack bounds recorded
+  on an earlier entry, so being re-entered on another thread trips
+  `morestack on g0`. Linux is unaffected, and ordinary synchronous use was not
+  reproduced as failing. (#518)
+
 - Add `make ci-local`, which runs everything CI runs, in CI's order, with the
   commands CI uses. `scripts/cilocal` reads the `run:` steps out of
   `.github/workflows/*.yml` and executes them as written under bash, from each

@@ -260,7 +260,6 @@ func testAddressEntryB(b *testing.B, address string) xdr.SorobanAuthorizationEnt
 	}
 }
 
-
 func TestStreamingSign_InputPreserved(t *testing.T) {
 	kp := keypair.MustRandom()
 	entry := testAddressEntry(t, kp.Address())

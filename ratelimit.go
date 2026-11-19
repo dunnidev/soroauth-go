@@ -133,7 +133,7 @@ func (s *rateLimitedSigner) refill() {
 	if elapsed <= 0 {
 		return
 	}
-	newTokens := int(elapsed / s.interval) * s.rate
+	newTokens := int(elapsed/s.interval) * s.rate
 	if newTokens > 0 {
 		s.tokens += newTokens
 		if s.tokens > s.rate {
